@@ -9,17 +9,8 @@ command -v unzip >/dev/null 2>&1 || { echo >&2 "unzip is not installed.  Abortin
 DIR=$(dirname "${1}")
 TGT_DIR=/sorcerer/
 
-if pidof systemd
-then
-systemctl stop sorcerer
-else
-service stop sorcerer
-fi
-
-#kill  $(ps aux | grep 'SorcererClient.dll' | awk '{print $2}')
-
 mkdir -p "${TGT_DIR}"
-unzip -o -u $1 -d "${TGT_DIR}"
+unzip -o $1 -d "${TGT_DIR}"
 
 # other lib for centos/redhat
 if [ -f /etc/redhat-release ]; then
@@ -44,7 +35,7 @@ fi
 if pidof systemd
 then
   cp "${DIR}/sorcerer.service" /etc/systemd/system/
-  
+  systemctl daemon-reload
   systemctl enable sorcerer
   systemctl --no-block restart sorcerer
 else
